@@ -1,10 +1,16 @@
 <?php
+/**
+ * @changelog 18 Jan 2018 Added compatibility with Windows
+ * @changelog 18 Jan 2018 Returned compatibility with PHP-FPM
+ */
 
-namespace vova07\console;
+namespace cbackup\console;
 
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
+use yii\base\NotSupportedException;
+
 
 /**
  * ConsoleRunner - a component for running console commands on background.
@@ -12,7 +18,7 @@ use yii\base\InvalidConfigException;
  * Usage:
  * ```
  * ...
- * $cr = new ConsoleRunner(['file' => '@my/path/to/yii']);
+ * $cr = new ConsoleRunner(['file' => 'my/path/to/yii']);
  * $cr->run('controller/action param1 param2 ...');
  * ...
  * ```
@@ -23,7 +29,7 @@ use yii\base\InvalidConfigException;
  * components [
  *     'consoleRunner' => [
  *         'class' => 'vova07\console\ConsoleRunner',
- *         'file' => '@my/path/to/yii' // or an absolute path to console file
+ *         'file'  => 'my/path/to/yii' // or an absolute path to console file
  *     ]
  * ]
  * ...
@@ -34,22 +40,50 @@ use yii\base\InvalidConfigException;
  */
 class ConsoleRunner extends Component
 {
+
     /**
-     * @var string Console application file that will be executed.
+     * Console application file that will be executed.
      * Usually it can be `yii` file.
+     *
+     * @var string
      */
     public $file;
+
+    /**
+     * Absolute path to PHP executable
+     * @var string
+     */
+    private $php;
 
     /**
      * @inheritdoc
      */
     public function init()
     {
+
         parent::init();
 
         if ($this->file === null) {
             throw new InvalidConfigException('The "file" property must be set.');
         }
+
+        if($this->isWindows()) {
+
+            $this->php = exec('where php.exe');
+
+            if( is_dir(PHP_BINDIR) && file_exists(PHP_BINDIR.DIRECTORY_SEPARATOR.'php.exe') ) {
+                $this->php = PHP_BINDIR.DIRECTORY_SEPARATOR.'php.exe';
+            }
+
+            if( empty($this->php) ) {
+                throw new NotSupportedException('Could not find php.exe');
+            }
+
+        }
+        else {
+            $this->php = PHP_BINDIR . '/php';
+        }
+
     }
 
     /**
@@ -60,26 +94,33 @@ class ConsoleRunner extends Component
      */
     public function run($cmd)
     {
-        $cmd = PHP_BINARY . ' ' . Yii::getAlias($this->file) . ' ' . $cmd;
+
+        $cmd = $this->php . ' ' . Yii::getAlias($this->file) . ' ' . $cmd;
+
         if ($this->isWindows() === true) {
             pclose(popen('start /b ' . $cmd, 'r'));
-        } else {
+        }
+        else {
             pclose(popen($cmd . ' > /dev/null 2>&1 &', 'r'));
         }
+
         return true;
+
     }
 
     /**
-     * Check operating system
+     * Check if operating system is Windows
      *
      * @return boolean true if it's Windows OS
      */
     protected function isWindows()
     {
-        if (PHP_OS == 'WINNT' || PHP_OS == 'WIN32') {
+        if( mb_stripos(PHP_OS, 'WIN') !== false ) {
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
+
 }

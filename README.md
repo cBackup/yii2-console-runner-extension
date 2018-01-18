@@ -3,13 +3,18 @@ Console Runner
 
 An extension for running console commands on background in Yii framework.
 
+Changelog
+------------
+
+Unlike it's parent version, this fork has support for Windows and doesn't break compatibility with PHP-FPM.
+
 Installation
 ------------
 
 Add the following to `require` section of your `composer.json`:
 
 ```
-"vova07/yii2-console-runner-extension": "*"
+"cbackup/yii2-console-runner-extension": "*"
 ```
 
 Then do `composer install`.
@@ -20,7 +25,7 @@ Usage
 Imported class:
 
 ```php
-use vova07\console\ConsoleRunner;
+use cbackup\console;
 $cr = new ConsoleRunner(['file' => '@my/path/to/yii']);
 $cr->run('controller/action param1 param2 ...');
 ```
@@ -32,8 +37,8 @@ Application component:
 ...
 components [
     'consoleRunner' => [
-        'class' => 'vova07\console\ConsoleRunner',
-        'file' => '@my/path/to/yii' // or an absolute path to console file
+        'class' => 'cbackup\console\ConsoleRunner',
+        'file'  => '@my/path/to/yii' // or an absolute path to console file
     ]
 ]
 ...

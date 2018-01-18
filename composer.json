@@ -1,26 +1,30 @@
 {
-    "name": "vova07/yii2-console-runner-extension",
-    "description": "An extension for running console commands on background in Yii framework.",
-    "keywords": ["yii2", "yii 2", "console", "runner", "commands", "background"],
-    "homepage": "https://github.com/vova07/yii2-console-runner-extension",
-    "type": "yii2-extension",
-    "license": "BSD-3-Clause",
-    "authors": [
-        {
-            "name": "Crudu Vasile",
-            "email": "bazillio07@yandex.ru"
-        }
-    ],
-    "support": {
-        "issues": "https://github.com/vova07/yii2-console-runner-extension/issues?state=open",
-        "source": "https://github.com/vova07/yii2-console-runner-extension"
+  "name": "cbackup/yii2-console-runner-extension",
+  "description": "An extension for running console commands on background in Yii framework.",
+  "keywords": ["yii2", "yii 2", "console", "runner", "commands", "background"],
+  "homepage": "https://github.com/cBackup/yii2-console-runner-extension",
+  "type": "yii2-extension",
+  "license": "BSD-3-Clause",
+  "version": "0.2.0",
+  "authors": [
+    {
+      "name": "Crudu Vasile",
+      "email": "bazillio07@yandex.ru"
     },
-    "require": {
-        "yiisoft/yii2": "*"
-    },
-    "autoload": {
-        "psr-4": {
-            "vova07\\console\\": ""
-        }
+    {
+      "name": "Olegs Capligins",
+      "email": "shader@dautkom.lv"
     }
+  ],
+  "require": {
+    "yiisoft/yii2": "*"
+  },
+  "require-dev": {
+    "yiisoft/yii2-debug": "~2.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "cbackup\\console\\": ""
+    }
+  }
 }
